@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/fecha-utils.iml" filepath="$PROJECT_DIR$/fecha-utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/yau-utils.iml" filepath="$PROJECT_DIR$/yau-utils.iml" />
     </modules>
   </component>

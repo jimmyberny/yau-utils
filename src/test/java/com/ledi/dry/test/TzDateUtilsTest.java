@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by berny on 10/12/15.
@@ -19,7 +20,7 @@ public class TzDateUtilsTest {
 
     public static final Logger log = LoggerFactory.getLogger(TzDateUtilsTest.class);
 
-    @Test
+
     public void testToUTC() {
         TimeZone tz = TimeZone.getTimeZone("America/Mexico_City"); // CST || CDT (depends on DST)
 
@@ -48,7 +49,7 @@ public class TzDateUtilsTest {
                 DateFormatUtils.ISO_DATETIME_FORMAT.format(_d1), DateFormatUtils.ISO_DATETIME_FORMAT.format(test));
     }
 
-    @Test
+
     public void testToGMT() {
         TimeZone tz = TimeZone.getTimeZone("America/Mexico_City");
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -65,7 +66,7 @@ public class TzDateUtilsTest {
 
     }
 
-    @Test
+
     public void testStartToday() {
         TimeZone tz = TimeZone.getTimeZone("America/Mexico_City");
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -88,6 +89,11 @@ public class TzDateUtilsTest {
         start = TzDateUtils.getUTCStartOfDate(utc, tz);
         Assert.assertEquals("Start of day as UTC is wrong",
                 DateFormatUtils.ISO_DATETIME_FORMAT.format(expected), DateFormatUtils.ISO_DATETIME_FORMAT.format(start));
+    }
+
+    @Test
+    public void testWeek() {
+
     }
 
 }

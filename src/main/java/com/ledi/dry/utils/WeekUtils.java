@@ -6,8 +6,10 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -16,6 +18,8 @@ import java.util.TimeZone;
 public class WeekUtils {
 
     private static final Logger log = LoggerFactory.getLogger(WeekUtils.class);
+
+    private static final int _DEFAULTS = -1;
 
     /**
      * Retorna el numero de semana al que pertenece una fecha.
@@ -26,49 +30,77 @@ public class WeekUtils {
      * @param date Fecha, se ignora la zona horaria.
      * @return El número de la semana que contiene la fecha pasada como parámetro.
      */
-    public static Integer getWeek(Date date) {
-        Calendar aux = Calendar.getInstance();
-        aux.setTime(date);
-        return aux.get(Calendar.WEEK_OF_YEAR);
+    public static int getWeekNumber(Date date) {
+        return getWeekNumber(date, _DEFAULTS);
     }
 
     /**
-     * Retorna la semana a la que pertenece la fecha UTC pasada como parámetro.
+     * Retorna el número de semana en el año al que pertenece una fecha dada considerando
+     * el inicio del día indicado.
+     *
+     * @param date        Fecha de la que se desea obtener la semana.
+     * @param startOfWeek Número del día en el que comienza la semana.
+     * @return El número de la semana en el año.
+     */
+    public static int getWeekNumber(Date date, int startOfWeek) {
+        Calendar cal = Calendar.getInstance();
+        if (startOfWeek != _DEFAULTS) {
+            cal.setFirstDayOfWeek(startOfWeek);
+        }
+        cal.setTime(date);
+
+        return cal.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    /**
+     * Retorna la semana a la que pertenece la fecha UTC dada.
      *
      * @param utc Fecha en UTC.
      * @param tz  Zona horaria en la que se desea obtener la semana.
      * @return El número de la semana a la que pertenece a la fecha.
      */
-    public static Integer getWeek(Date utc, TimeZone tz) {
-        Date zoned = TzDateUtils.toTimeZone(utc, tz);
+    public static int getUTCWeekNumber(Date utc, TimeZone tz) {
+        return getUTCWeekNumber(utc, tz, _DEFAULTS);
+    }
 
-        Calendar aux = Calendar.getInstance(tz);
-        aux.setTime(zoned);
+    public static int getUTCWeekNumber(Date utc, TimeZone tz, int firstDay) {
+        Calendar aux = Calendar.getInstance();
+        if (firstDay != _DEFAULTS) {
+            aux.setFirstDayOfWeek(firstDay);
+            aux.setMinimalDaysInFirstWeek(4);
+        }
 
+        aux.setTime(TzDateUtils.toTimeZone(utc, tz));
         return aux.get(Calendar.WEEK_OF_YEAR);
     }
 
     /**
+     *
      * @param date
      * @param tz
      * @return
      */
-    public static DateInterval getUTCWeekInterval(Date date, TimeZone tz) {
-        Date zoned = DateUtils.truncate(TzDateUtils.toTimeZone(date, tz), Calendar.DATE);
+    public static DateInterval getUTCWeek(Date date, TimeZone tz) {
+        return getUTCWeek(date, tz, Calendar.MONDAY);
+    }
 
+    public static DateInterval getUTCWeek(Date utc, TimeZone tz, int firstDay) {
         Calendar aux = Calendar.getInstance();
-        aux.setTime(zoned);
-        zoned = DateUtils.addDays(zoned, Calendar.SUNDAY == aux.get(Calendar.DAY_OF_WEEK) ?
-                -6 : Calendar.MONDAY - aux.get(Calendar.DAY_OF_WEEK));
+            aux.setFirstDayOfWeek(firstDay);
+
+        Date local = TzDateUtils.toTimeZone(utc, tz);
+        aux.setTime(local);
+        aux.set(Calendar.DAY_OF_WEEK, firstDay);
 
         DateInterval res = new DateInterval();
-        res.setStart(TzDateUtils.getUTC(zoned, tz));
-        res.setEnd(DateUtils.addDays(res.getStart(), 7));
+        Date utcStart = TzDateUtils.getUTC(DateUtils.truncate(aux.getTime(), Calendar.DATE), tz);
+        res.setStart(utcStart);
+        res.setEnd(DateUtils.addDays(utcStart, 7));
         return res;
     }
 
 
     public static String toString(Date date) {
-        return DateFormatUtils.ISO_DATETIME_FORMAT.format(date);
+        return DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(date);
     }
 }
