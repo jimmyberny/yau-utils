@@ -59,11 +59,11 @@ public class WeekUtils {
      * @param tz  Zona horaria en la que se desea obtener la semana.
      * @return El número de la semana a la que pertenece a la fecha.
      */
-    public static int getUTCWeekNumber(Date utc, TimeZone tz) {
-        return getUTCWeekNumber(utc, tz, _DEFAULTS);
+    public static int getWeekNumber(Date utc, TimeZone tz) {
+        return getWeekNumber(utc, tz, _DEFAULTS);
     }
 
-    public static int getUTCWeekNumber(Date utc, TimeZone tz, int firstDay) {
+    public static int getWeekNumber(Date utc, TimeZone tz, int firstDay) {
         Calendar aux = Calendar.getInstance();
         if (firstDay != _DEFAULTS) {
             aux.setFirstDayOfWeek(firstDay);

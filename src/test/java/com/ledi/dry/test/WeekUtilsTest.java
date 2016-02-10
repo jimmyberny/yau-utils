@@ -28,12 +28,12 @@ public class WeekUtilsTest {
         Date utc = getDate("2015-12-31T00:00:00-06:00"); // Dec 31th, 2015. Week 53th
         TimeZone mx = TimeZone.getTimeZone("America/Mexico_City");
 
-        int week = WeekUtils.getUTCWeekNumber(utc, mx, Calendar.MONDAY);
+        int week = WeekUtils.getWeekNumber(utc, mx, Calendar.MONDAY);
         Assert.assertEquals("Numero de semana incorrecto",
                 53, week);
 
         utc = getDate("2016-01-04T00:00:00-06:00"); // Jan 1st, 2016, Week 1st
-        week = WeekUtils.getUTCWeekNumber(utc, mx, Calendar.MONDAY);
+        week = WeekUtils.getWeekNumber(utc, mx, Calendar.MONDAY);
         Assert.assertEquals("Número de semana incorrecto",
                 1, week);
     }
