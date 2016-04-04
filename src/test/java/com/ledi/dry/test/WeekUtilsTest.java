@@ -49,6 +49,20 @@ public class WeekUtilsTest {
                 "2015-12-28T06:00:00+00:00", WeekUtils.toString(utcWeek.getStart()));
         Assert.assertEquals("Final de semana incorrecto",
                 "2016-01-04T06:00:00+00:00", WeekUtils.toString(utcWeek.getEnd()));
+
+    }
+
+    @Test
+    public void testGetUTCWeekSummerTime() {
+        // "YYYY-MM-ddTHH:mm:ss[+-]hh:mm"
+        Date utc = getDate("2016-04-01T00:00:00-06:00"); // An Local time converted to UTC
+        TimeZone mx = TimeZone.getTimeZone("America/Mexico_City");
+        DateInterval utcWeek = WeekUtils.getUTCWeek(utc, mx);
+
+        Assert.assertEquals("Inicio de semana incorrecto",
+                "2016-03-28T06:00:00+00:00", WeekUtils.toString(utcWeek.getStart()));
+        Assert.assertEquals("Final de semana incorrecto",
+                "2016-04-04T05:00:00+00:00", WeekUtils.toString(utcWeek.getEnd()));
     }
 
     private Date getDate(String input) {

@@ -95,7 +95,9 @@ public class WeekUtils {
         DateInterval res = new DateInterval();
         Date utcStart = TzDateUtils.getUTC(DateUtils.truncate(aux.getTime(), Calendar.DATE), tz);
         res.setStart(utcStart);
-        res.setEnd(DateUtils.addDays(utcStart, 7));
+
+        Date auxEnd = DateUtils.addDays(aux.getTime(), 7);
+        res.setEnd(TzDateUtils.getUTC(DateUtils.truncate(auxEnd, Calendar.DATE), tz));
         return res;
     }
 
